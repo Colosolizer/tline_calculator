@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_xlider/flutter_xlider.dart';
+import 'package:flutter_titled_container/flutter_titled_container.dart';
 
 void main() {
   runApp(const MyApp());
