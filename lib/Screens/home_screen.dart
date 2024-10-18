@@ -59,12 +59,34 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.center, // Center the button
               children: [
                 Padding(
+                  //Padding for Coaxial Line Button
                   padding: const EdgeInsets.all(
                       8.0), // Add padding around the button
-                  child: _mainbutton(() {
-                    // Define what happens when the button is pressed
-                    print('Button1 pressed');
-                  }, 'Button1'),
+                  child: _mainbutton(() => null, 'Coaxial Line'),
+                ),
+                Padding(
+                  //Padding for Two Wire Line Button
+                  padding: const EdgeInsets.all(
+                      8.0), // Add padding around the button
+                  child: _mainbutton(() => null, 'Two Wire Line'),
+                ),
+                Padding(
+                  //Padding For Parallel Plate Button
+                  padding: const EdgeInsets.all(
+                      8.0), // Add padding around the button
+                  child: _mainbutton(() => null, 'Parallel Plate Line'),
+                ),
+                Padding(
+                  //Padding for Air Line Button
+                  padding: const EdgeInsets.all(
+                      8.0), // Add padding around the button
+                  child: _mainbutton(() => null, 'Air Line'),
+                ),
+                Padding(
+                  //Padding for MicroStrip Line Button
+                  padding: const EdgeInsets.all(
+                      8.0), // Add padding around the button
+                  child: _mainbutton(() => null, 'Microstrip Line'),
                 ),
               ])
         ],
@@ -83,6 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: Apptheme.accent,
       foregroundColor: Apptheme.darker,
       elevation: 5.0,
+      fixedSize: Size(200, 50),
     );
   }
 }
