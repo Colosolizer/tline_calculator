@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tline_calculator/utils/app_styles.dart';
-//import 'package:flutter_xlider/flutter_xlider.dart';
+
 //import 'package:flutter_titled_container/flutter_titled_container.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -11,6 +11,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  //Variables for Sliders
+  double _currentvalue = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
           SizedBox(width: 1000, height: 30),
 
-          //ROW 2 WITH SLIDERS
+          //ROW 2 WITH TM LINE BUTTONS
           Row(
               mainAxisAlignment: MainAxisAlignment.center, // Center the button
               children: [
@@ -62,33 +65,62 @@ class _HomeScreenState extends State<HomeScreen> {
                   //Padding for Coaxial Line Button
                   padding: const EdgeInsets.all(
                       8.0), // Add padding around the button
-                  child: _mainbutton(() => null, 'Coaxial Line'),
+                  child: _mainbutton(() => null, 'COAXIAL LINE'),
                 ),
                 Padding(
                   //Padding for Two Wire Line Button
                   padding: const EdgeInsets.all(
                       8.0), // Add padding around the button
-                  child: _mainbutton(() => null, 'Two Wire Line'),
+                  child: _mainbutton(() => null, 'TWO WIRE LINE'),
                 ),
                 Padding(
                   //Padding For Parallel Plate Button
                   padding: const EdgeInsets.all(
                       8.0), // Add padding around the button
-                  child: _mainbutton(() => null, 'Parallel Plate Line'),
+                  child: _mainbutton(() => null, 'PARALLEL PLATE LINE'),
                 ),
                 Padding(
                   //Padding for Air Line Button
                   padding: const EdgeInsets.all(
                       8.0), // Add padding around the button
-                  child: _mainbutton(() => null, 'Air Line'),
+                  child: _mainbutton(() => null, 'AIR LINE'),
                 ),
                 Padding(
                   //Padding for MicroStrip Line Button
                   padding: const EdgeInsets.all(
                       8.0), // Add padding around the button
-                  child: _mainbutton(() => null, 'Microstrip Line'),
+                  child: _mainbutton(() => null, 'MICROSTRIP LINE'),
                 ),
-              ])
+              ]),
+
+          //ROW 3 with first set of sliders
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                //Showcases the Slider Value of Slider 1
+                _currentvalue.toString(),
+                style: TextStyle(fontSize: 20, color: Apptheme.accent),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Slider(
+                  value: _currentvalue,
+                  min: 0,
+                  max: 10,
+                  divisions: 10,
+                  activeColor: Apptheme.accent,
+                  thumbColor: Apptheme.accent,
+                  inactiveColor: Apptheme.darker,
+                  onChanged: (value) {
+                    setState(() {
+                      _currentvalue = value;
+                    });
+                  },
+                ),
+              )
+            ],
+          )
         ],
       ),
     );
