@@ -1,24 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:tline_calculator/Screens/coaxial_screen.dart';
-import 'package:tline_calculator/Screens/parallelplate_screen.dart';
+import 'package:tline_calculator/Screens/home_screen.dart';
 import 'package:tline_calculator/utils/app_styles.dart';
 import 'package:tline_calculator/widgets/custom_slider.dart';
 
-//import 'package:flutter_titled_container/flutter_titled_container.dart';
+//COAXIAL TRANSMISSION LINE SCREEN
 
-//DEFAULT HOME SCREEN IS TWO WIRE TRANSMISSION LINE
-
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class ParallelplateScreen extends StatefulWidget {
+  const ParallelplateScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<ParallelplateScreen> createState() => _ParallelplateScreen();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _ParallelplateScreen extends State<ParallelplateScreen> {
   //Variables for Sliders
   double _currentvalue = 0;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,19 +79,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   //Padding for Two Wire Line Button
                   padding: const EdgeInsets.all(
                       8.0), // Add padding around the button
-                  child: _mainbutton(() => null, 'TWO WIRE LINE'),
+                  child: _mainbutton(
+                      () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HomeScreen()),
+                          ),
+                      'TWO WIRE LINE'),
                 ),
                 Padding(
                   //Padding For Parallel Plate Button
                   padding: const EdgeInsets.all(
                       8.0), // Add padding around the button
-                  child: _mainbutton(
-                      () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ParallelplateScreen()),
-                          ),
-                      'PARALLEL PLATE LINE'),
+                  child: _mainbutton(() => null, 'PARALLEL PLATE LINE'),
                 ),
                 Padding(
                   //Padding for Air Line Button
@@ -116,7 +113,9 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Text(
                 //Showcases the Slider Value of R - Slider 1
-                _currentvalue.toString(),
+                //_currentvalue.toString(),
+                "Parallel Plate",
+
                 style: TextStyle(fontSize: 20, color: Apptheme.accent),
               ),
               Padding(

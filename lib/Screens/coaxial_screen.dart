@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:tline_calculator/Screens/home_screen.dart';
+import 'package:tline_calculator/Screens/parallelplate_screen.dart';
 import 'package:tline_calculator/utils/app_styles.dart';
 import 'package:tline_calculator/widgets/custom_slider.dart';
+
+//COAXIAL TRANSMISSION LINE SCREEN
 
 class CoaxialScreen extends StatefulWidget {
   const CoaxialScreen({super.key});
@@ -69,13 +73,25 @@ class _CoaxialScreen extends State<CoaxialScreen> {
                   //Padding for Two Wire Line Button
                   padding: const EdgeInsets.all(
                       8.0), // Add padding around the button
-                  child: _mainbutton(() => null, 'TWO WIRE LINE'),
+                  child: _mainbutton(
+                      () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HomeScreen()),
+                          ),
+                      'TWO WIRE LINE'),
                 ),
                 Padding(
                   //Padding For Parallel Plate Button
                   padding: const EdgeInsets.all(
                       8.0), // Add padding around the button
-                  child: _mainbutton(() => null, 'PARALLEL PLATE LINE'),
+                  child: _mainbutton(
+                      () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ParallelplateScreen()),
+                          ),
+                      'PARALLEL PLATE LINE'),
                 ),
                 Padding(
                   //Padding for Air Line Button
@@ -97,7 +113,8 @@ class _CoaxialScreen extends State<CoaxialScreen> {
             children: [
               Text(
                 //Showcases the Slider Value of R - Slider 1
-                _currentvalue.toString(),
+                //_currentvalue.toString(),
+                "Coaxial",
                 style: TextStyle(fontSize: 20, color: Apptheme.accent),
               ),
               Padding(
