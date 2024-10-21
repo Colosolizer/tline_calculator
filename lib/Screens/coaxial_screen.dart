@@ -2,19 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:tline_calculator/utils/app_styles.dart';
 import 'package:tline_calculator/widgets/custom_slider.dart';
 
-//import 'package:flutter_titled_container/flutter_titled_container.dart';
-
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class CoaxialScreen extends StatefulWidget {
+  const CoaxialScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<CoaxialScreen> createState() => _CoaxialScreen();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _CoaxialScreen extends State<CoaxialScreen> {
   //Variables for Sliders
   double _currentvalue = 0;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
