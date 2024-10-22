@@ -5,7 +5,8 @@
 import 'package:tline_calculator/utils/constant.dart';
 import 'dart:math';
 
-const double e0 = 8.854e-12;
+const double e0 = 8.854e-12; //permitivity of free space
+const double mu = 4e-7 * pi;
 
 //Calculates the Phase Velocity
 double pvelocity(double e_r) {
@@ -122,7 +123,7 @@ class Complex {
 
 //Coaxial Specific Formula Functions
 
-//Capacitance
+//Coaxial Capacitance per unit length
 
 double coacap(double b, double a, double er) {
   double rb = b / 2;
@@ -130,4 +131,22 @@ double coacap(double b, double a, double er) {
   double e = er * e0;
   double cc = (2 * pi * e) / (log(rb / ra));
   return cc;
+}
+
+//Coaxial Inductance per unit length
+
+double coind(double b, double a) {
+  double rb = b / 2;
+  double ra = a / 2;
+  double ind = (mu / (2 * pi)) * log(rb / ra);
+  return ind;
+}
+
+/////////////////////////////////////////////////
+
+//Propagation Delay
+
+double copdelay(double p) {
+  double t = 1 / p;
+  return t;
 }
