@@ -16,14 +16,17 @@ class CoaxialScreen extends StatefulWidget {
 }
 
 class _CoaxialScreen extends State<CoaxialScreen> {
-  //Variables for Sliders
+  //Variables
   double _currentvalue = 0;
   double _a = 0.5;
   double _b = 1.0;
   double _epsilonr = 0;
-  double _freq = 0;
+  String freqtext = '';
+  double? _freq = 0;
   final TextEditingController titleController = TextEditingController();
   final TextEditingController freqController = TextEditingController();
+
+  //Variables that hold user input
 
   @override
   Widget build(BuildContext context) {
@@ -57,11 +60,26 @@ class _CoaxialScreen extends State<CoaxialScreen> {
               ), //Box one with container 2
               SizedBox(width: 30, height: 5),
               SizedBox(
-                //Contains the First Container
+                //Contains the Third Container
                 width: 400,
                 height: 400,
-                child:
-                    Container(width: 500, height: 500, color: Apptheme.darker),
+                child: Container(
+                  width: 500,
+                  height: 500,
+                  color: Apptheme.darker,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'Double is: $_freq',
+                          style: Apptheme.inputStyle,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
               ) //Box one with container 3
             ],
           ), //END OF TOP ROW
@@ -199,6 +217,21 @@ class _CoaxialScreen extends State<CoaxialScreen> {
                       maxLines: 1,
                       hintText: 'Frequency (Hz)',
                       controller: freqController),
+                ),
+              ),
+              Padding(
+                //Padding for Two Wire Line Button
+                padding:
+                    const EdgeInsets.all(8.0), // Add padding around the button
+                child: MaterialButton(
+                  onPressed: () {
+                    setState(() {
+                      freqtext = freqController.text;
+                      _freq = double.tryParse(freqtext);
+                    });
+                  },
+                  color: Apptheme.accent,
+                  child: Text('CALCULATE'),
                 ),
               ),
             ],
