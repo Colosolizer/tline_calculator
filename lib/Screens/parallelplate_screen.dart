@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:tline_calculator/Screens/coaxial_screen.dart';
 import 'package:tline_calculator/Screens/home_screen.dart';
+import 'package:tline_calculator/Screens/microstrip_screen.dart';
 import 'package:tline_calculator/utils/app_styles.dart';
 import 'package:tline_calculator/widgets/custom_slider.dart';
 
-//COAXIAL TRANSMISSION LINE SCREEN
+//PARALLEL PLATE TRANSMISSION LINE SCREEN
 
 class ParallelplateScreen extends StatefulWidget {
   const ParallelplateScreen({super.key});
@@ -103,7 +104,13 @@ class _ParallelplateScreen extends State<ParallelplateScreen> {
                   //Padding for MicroStrip Line Button
                   padding: const EdgeInsets.all(
                       8.0), // Add padding around the button
-                  child: _mainbutton(() => null, 'MICROSTRIP LINE'),
+                  child: _mainbutton(
+                      () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MicrostripScreen()),
+                          ),
+                      'MICROSTRIP LINE'),
                 ),
               ]),
 
