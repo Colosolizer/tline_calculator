@@ -21,11 +21,19 @@ class _CoaxialScreen extends State<CoaxialScreen> {
   double _currentvalue = 0;
   double _a = 0.5; //Inner Radius
   double _b = 1.0; //Outer Radius
+  //String innerradius = '';
+  //String outerradius = '';
+  String erstring = '';
   double _epsilonr = 0;
   String freqtext = '';
   double _freq = 0.0;
   double w = 0.0;
-  final TextEditingController titleController = TextEditingController();
+  String p_constanttext = '';
+  double phaseconstant = 0.0;
+  double phasevelocity = 0.0;
+  double z0 = 0.0;
+  double y0 = 0.0;
+  final TextEditingController erController = TextEditingController();
   final TextEditingController freqController = TextEditingController();
 
   //Variables that hold user input
@@ -69,25 +77,71 @@ class _CoaxialScreen extends State<CoaxialScreen> {
                   width: 500,
                   height: 500,
                   color: Apptheme.darker,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  child: Column(
                     children: [
-                      //Showcases Frequency
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'Frequency: $_freq',
-                          style: Apptheme.inputStyle,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          //Showcases Frequency
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Frequency: $_freq',
+                              style: Apptheme.inputStyle,
+                            ),
+                          ),
+                          //Showcases Angular Frequency (w)
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'w: ${w.toStringAsFixed(2)}rad/s',
+                              style: Apptheme.inputStyle,
+                            ),
+                          )
+                        ],
                       ),
-                      //Showcases Angular Frequency (w)
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'w: ${w.toStringAsFixed(2)}',
-                          style: Apptheme.inputStyle,
-                        ),
-                      )
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          //Phase Constant
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'β: ${phaseconstant.toStringAsExponential(2)}rad/m',
+                              style: Apptheme.inputStyle,
+                            ),
+                          ),
+                          //Phase Velocity (u_p)
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'u_p: ${phasevelocity.toStringAsExponential(2)}m/s',
+                              style: Apptheme.inputStyle,
+                            ),
+                          )
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          //Characteristic Impedance (Z_0)
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Z_0: ${z0.toStringAsFixed(2)}ohm',
+                              style: Apptheme.inputStyle,
+                            ),
+                          ),
+                          //Admittance
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Y_0: ${y0.toStringAsExponential(2)}S',
+                              style: Apptheme.inputStyle,
+                            ),
+                          )
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -158,7 +212,7 @@ class _CoaxialScreen extends State<CoaxialScreen> {
               Text(
                 //Showcases the Slider Value of R - Slider 1
                 //_currentvalue.toString(),
-                "Inner Radius a: $_a mm ",
+                "Inner Diameter a: $_a mm ",
                 style: TextStyle(fontSize: 20, color: Apptheme.accent),
               ),
               Padding(
@@ -180,7 +234,7 @@ class _CoaxialScreen extends State<CoaxialScreen> {
               ),
               Text(
                 //Showcases the Slider Value of L - Slider 2
-                "Outer Radius: $_b mm",
+                "Outer Diameter: ${_b.toStringAsFixed(3)} mm",
                 style: TextStyle(fontSize: 20, color: Apptheme.accent),
               ),
               Padding(
@@ -189,7 +243,7 @@ class _CoaxialScreen extends State<CoaxialScreen> {
                   value: _b,
                   min: 0,
                   max: 177,
-                  divisions: 20,
+                  divisions: 177,
                   activeColor: Apptheme.accent,
                   thumbColor: Apptheme.accent,
                   inactiveColor: Apptheme.darker,
@@ -215,7 +269,7 @@ class _CoaxialScreen extends State<CoaxialScreen> {
                       maxLength: 5,
                       maxLines: 1,
                       hintText: 'ϵ_r',
-                      controller: titleController),
+                      controller: erController),
                 ),
               ),
               Padding(
@@ -237,9 +291,20 @@ class _CoaxialScreen extends State<CoaxialScreen> {
                 child: MaterialButton(
                   onPressed: () {
                     setState(() {
+                      //Calculates Frequency and Angular Frequency
                       freqtext = freqController.text;
                       _freq = double.tryParse(freqtext) ?? 0.0;
                       w = afrequency(_freq);
+                      //Calculates Beta (Phase Constant)
+                      erstring = erController.text;
+                      _epsilonr = double.tryParse(erstring) ?? 0.0;
+                      phaseconstant = pconstant(_freq, _epsilonr);
+                      //Calculates Phase Velocity
+                      phasevelocity = pvelocity(_epsilonr);
+                      //Calculate Characteristic Impedance
+                      z0 = coaxialwirecimp(_epsilonr, _b, _a);
+                      //Calculate Admittance (Y)
+                      y0 = admittance(z0);
                     });
                   },
                   color: Apptheme.accent,

@@ -5,6 +5,8 @@
 import 'package:tline_calculator/utils/constant.dart';
 import 'dart:math';
 
+const double e0 = 8.854e-12;
+
 //Calculates the Phase Velocity
 double pvelocity(double e_r) {
   double pvel = Constants.speedOfLight / sqrt(e_r);
@@ -35,7 +37,7 @@ double twowirecimp(double er, double D, double d) {
 //Calculates Characteristic Impedance (Coaxial Wire)
 
 double coaxialwirecimp(double er, double b, double a) {
-  double z_0 = (60 / er) * log(b / a);
+  double z_0 = (60 / sqrt(er)) * log(b / a);
   return z_0;
 }
 
@@ -61,6 +63,13 @@ Complex generalimp(double R, double C, double L, double G, double w) {
   Complex num3 = num1 / num2;
   Complex z_0 = num3.sqrtc();
   return z_0;
+}
+
+//Calculates Admittance
+
+double admittance(double z) {
+  double y = 1 / z;
+  return y;
 }
 
 //For Complex Number Division
@@ -109,4 +118,16 @@ class Complex {
   String toString() {
     return '${real} + ${imaginary}j';
   }
+}
+
+//Coaxial Specific Formula Functions
+
+//Capacitance
+
+double coacap(double b, double a, double er) {
+  double rb = b / 2;
+  double ra = a / 2;
+  double e = er * e0;
+  double cc = (2 * pi * e) / (log(rb / ra));
+  return cc;
 }
