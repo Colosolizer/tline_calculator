@@ -3,6 +3,7 @@ import 'package:tline_calculator/Screens/home_screen.dart';
 import 'package:tline_calculator/Screens/microstrip_screen.dart';
 import 'package:tline_calculator/Screens/parallelplate_screen.dart';
 import 'package:tline_calculator/utils/app_styles.dart';
+import 'package:tline_calculator/utils/calculator.dart';
 import 'package:tline_calculator/widgets/custom_slider.dart';
 import 'package:tline_calculator/widgets/custom_textfield.dart';
 
@@ -18,11 +19,12 @@ class CoaxialScreen extends StatefulWidget {
 class _CoaxialScreen extends State<CoaxialScreen> {
   //Variables
   double _currentvalue = 0;
-  double _a = 0.5;
-  double _b = 1.0;
+  double _a = 0.5; //Inner Radius
+  double _b = 1.0; //Outer Radius
   double _epsilonr = 0;
   String freqtext = '';
-  double? _freq = 0;
+  double _freq = 0.0;
+  double w = 0.0;
   final TextEditingController titleController = TextEditingController();
   final TextEditingController freqController = TextEditingController();
 
@@ -70,10 +72,19 @@ class _CoaxialScreen extends State<CoaxialScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      //Showcases Frequency
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          'Double is: $_freq',
+                          'Frequency: $_freq',
+                          style: Apptheme.inputStyle,
+                        ),
+                      ),
+                      //Showcases Angular Frequency (w)
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'w: ${w.toStringAsFixed(2)}',
                           style: Apptheme.inputStyle,
                         ),
                       )
@@ -227,7 +238,8 @@ class _CoaxialScreen extends State<CoaxialScreen> {
                   onPressed: () {
                     setState(() {
                       freqtext = freqController.text;
-                      _freq = double.tryParse(freqtext);
+                      _freq = double.tryParse(freqtext) ?? 0.0;
+                      w = afrequency(_freq);
                     });
                   },
                   color: Apptheme.accent,

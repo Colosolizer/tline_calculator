@@ -13,7 +13,7 @@ double pvelocity(double e_r) {
 
 //Calculates Angular Frequency
 double afrequency(double value) {
-  double afreq = 2 * pi * value;
+  double? afreq = 2 * pi * value;
   return afreq;
 }
 
