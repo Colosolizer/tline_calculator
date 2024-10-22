@@ -4,6 +4,7 @@ import 'package:tline_calculator/Screens/microstrip_screen.dart';
 import 'package:tline_calculator/Screens/parallelplate_screen.dart';
 import 'package:tline_calculator/utils/app_styles.dart';
 import 'package:tline_calculator/widgets/custom_slider.dart';
+import 'package:tline_calculator/widgets/custom_textfield.dart';
 
 //COAXIAL TRANSMISSION LINE SCREEN
 
@@ -17,6 +18,13 @@ class CoaxialScreen extends StatefulWidget {
 class _CoaxialScreen extends State<CoaxialScreen> {
   //Variables for Sliders
   double _currentvalue = 0;
+  double _a = 0.5;
+  double _b = 1.0;
+  double _epsilonr = 0;
+  double _freq = 0;
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController freqController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -121,207 +129,80 @@ class _CoaxialScreen extends State<CoaxialScreen> {
               Text(
                 //Showcases the Slider Value of R - Slider 1
                 //_currentvalue.toString(),
-                "Coaxial",
+                "Inner Radius a: $_a mm ",
                 style: TextStyle(fontSize: 20, color: Apptheme.accent),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Slider(
-                  value: _currentvalue,
+                  value: _a,
                   min: 0,
                   max: 10,
-                  divisions: 10,
+                  divisions: 20,
                   activeColor: Apptheme.accent,
                   thumbColor: Apptheme.accent,
                   inactiveColor: Apptheme.darker,
                   onChanged: (value) {
                     setState(() {
-                      _currentvalue = value;
+                      _a = value;
                     });
                   },
                 ),
               ),
               Text(
                 //Showcases the Slider Value of L - Slider 2
-                _currentvalue.toString(),
+                "Outer Radius: $_b mm",
                 style: TextStyle(fontSize: 20, color: Apptheme.accent),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Slider(
-                  value: _currentvalue,
+                  value: _b,
                   min: 0,
-                  max: 10,
-                  divisions: 10,
+                  max: 177,
+                  divisions: 20,
                   activeColor: Apptheme.accent,
                   thumbColor: Apptheme.accent,
                   inactiveColor: Apptheme.darker,
                   onChanged: (value) {
                     setState(() {
-                      _currentvalue = value;
-                    });
-                  },
-                ),
-              ),
-              Text(
-                //Showcases the Slider Value of G - Slider 3
-                _currentvalue.toString(),
-                style: TextStyle(fontSize: 20, color: Apptheme.accent),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Slider(
-                  value: _currentvalue,
-                  min: 0,
-                  max: 10,
-                  divisions: 10,
-                  activeColor: Apptheme.accent,
-                  thumbColor: Apptheme.accent,
-                  inactiveColor: Apptheme.darker,
-                  onChanged: (value) {
-                    setState(() {
-                      _currentvalue = value;
-                    });
-                  },
-                ),
-              ),
-              Text(
-                //Showcases the Slider Value of C - Slider 4
-                _currentvalue.toString(),
-                style: TextStyle(fontSize: 20, color: Apptheme.accent),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Slider(
-                  value: _currentvalue,
-                  min: 0,
-                  max: 10,
-                  divisions: 10,
-                  activeColor: Apptheme.accent,
-                  thumbColor: Apptheme.accent,
-                  inactiveColor: Apptheme.darker,
-                  onChanged: (value) {
-                    setState(() {
-                      _currentvalue = value;
-                    });
-                  },
-                ),
-              ),
-              Text(
-                //Showcases the Slider Value of D - Slider 5
-                _currentvalue.toString(),
-                style: TextStyle(fontSize: 20, color: Apptheme.accent),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Slider(
-                  value: _currentvalue,
-                  min: 0,
-                  max: 10,
-                  divisions: 10,
-                  activeColor: Apptheme.accent,
-                  thumbColor: Apptheme.accent,
-                  inactiveColor: Apptheme.darker,
-                  onChanged: (value) {
-                    setState(() {
-                      _currentvalue = value;
+                      _b = value;
                     });
                   },
                 ),
               ),
             ],
           ),
-          //ROW 4 WITH SECOND SET OF SLIDERS
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Text(
-              //Showcases the Slider Value of Frequency - Slider 6
-              _currentvalue.toString(),
-              style: TextStyle(fontSize: 20, color: Apptheme.accent),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Slider(
-                value: _currentvalue,
-                min: 0,
-                max: 10,
-                divisions: 10,
-                activeColor: Apptheme.accent,
-                thumbColor: Apptheme.accent,
-                inactiveColor: Apptheme.darker,
-                onChanged: (value) {
-                  setState(() {
-                    _currentvalue = value;
-                  });
-                },
+          //THIS ROW HAS IN THE TEXT FIELDS
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  width: 200,
+                  height: 80,
+                  child: CustomTextfield(
+                      maxLength: 5,
+                      maxLines: 1,
+                      hintText: 'ϵ_r',
+                      controller: titleController),
+                ),
               ),
-            ),
-            Text(
-              //Showcases the Slider Value of Epsilon_R - Slider 7
-              _currentvalue.toString(),
-              style: TextStyle(fontSize: 20, color: Apptheme.accent),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Slider(
-                value: _currentvalue,
-                min: 0,
-                max: 10,
-                divisions: 10,
-                activeColor: Apptheme.accent,
-                thumbColor: Apptheme.accent,
-                inactiveColor: Apptheme.darker,
-                onChanged: (value) {
-                  setState(() {
-                    _currentvalue = value;
-                  });
-                },
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  width: 200,
+                  height: 80,
+                  child: CustomTextfield(
+                      maxLength: 5,
+                      maxLines: 1,
+                      hintText: 'Frequency (Hz)',
+                      controller: freqController),
+                ),
               ),
-            ),
-            Text(
-              //Showcases the Slider Value of Mu - Slider 8
-              _currentvalue.toString(),
-              style: TextStyle(fontSize: 20, color: Apptheme.accent),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Slider(
-                value: _currentvalue,
-                min: 0,
-                max: 10,
-                divisions: 10,
-                activeColor: Apptheme.accent,
-                thumbColor: Apptheme.accent,
-                inactiveColor: Apptheme.darker,
-                onChanged: (value) {
-                  setState(() {
-                    _currentvalue = value;
-                  });
-                },
-              ),
-            ),
-            Text(
-              //Showcases the Slider Value of Sigma - Slider 9
-              _currentvalue.toString(),
-              style: TextStyle(fontSize: 20, color: Apptheme.accent),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Slider(
-                value: _currentvalue,
-                min: 0,
-                max: 10,
-                divisions: 10,
-                activeColor: Apptheme.accent,
-                thumbColor: Apptheme.accent,
-                inactiveColor: Apptheme.darker,
-                onChanged: (value) {
-                  setState(() {
-                    _currentvalue = value;
-                  });
-                },
-              ),
-            )
-          ])
+            ],
+          )
         ],
       ),
     );
