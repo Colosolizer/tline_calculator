@@ -126,8 +126,8 @@ class Complex {
 //Coaxial Capacitance per unit length
 
 double coacap(double b, double a, double er) {
-  double rb = b / 2;
-  double ra = a / 2;
+  double rb = (b / 2) * 0.001;
+  double ra = (a / 2) * 0.001;
   double e = er * e0;
   double cc = (2 * pi * e) / (log(rb / ra));
   return cc;
@@ -136,8 +136,8 @@ double coacap(double b, double a, double er) {
 //Coaxial Inductance per unit length
 
 double coind(double b, double a) {
-  double rb = b / 2;
-  double ra = a / 2;
+  double rb = (b / 2) * 0.001;
+  double ra = (a / 2) * 0.001;
   double ind = (mu / (2 * pi)) * log(rb / ra);
   return ind;
 }

@@ -6,6 +6,7 @@ import 'package:tline_calculator/utils/app_styles.dart';
 import 'package:tline_calculator/utils/calculator.dart';
 import 'package:tline_calculator/widgets/custom_slider.dart';
 import 'package:tline_calculator/widgets/custom_textfield.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 //COAXIAL TRANSMISSION LINE SCREEN
 
@@ -33,6 +34,12 @@ class _CoaxialScreen extends State<CoaxialScreen> {
   double phasevelocity = 0.0;
   double z0 = 0.0;
   double y0 = 0.0;
+  double c = 0.0;
+  double l = 0.0;
+  List zvalues = [];
+  List<FlSpot> z0Data = [];
+  List<FlSpot> y0Data = [];
+
   final TextEditingController erController = TextEditingController();
   final TextEditingController freqController = TextEditingController();
 
@@ -40,6 +47,19 @@ class _CoaxialScreen extends State<CoaxialScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Calculate min and max for dynamic scaling
+    double minX = z0Data.isNotEmpty ? z0Data.first.x : 0;
+    double maxX = z0Data.isNotEmpty ? z0Data.last.x : 10;
+
+    // Check if z0Data is not empty before calculating minY and maxY
+    double minY = z0Data.isNotEmpty
+        ? z0Data.map((e) => e.y).reduce((a, b) => a < b ? a : b)
+        : 0; // Default value if empty
+
+    double maxY = z0Data.isNotEmpty
+        ? z0Data.map((e) => e.y).reduce((a, b) => a > b ? a : b)
+        : 10; // Default value if empty
+
     return Scaffold(
       backgroundColor: Apptheme.dark,
       body: Column(
@@ -57,12 +77,43 @@ class _CoaxialScreen extends State<CoaxialScreen> {
                 //Contains the First Container
                 width: 400,
                 height: 400,
-                child:
-                    Container(width: 500, height: 500, color: Apptheme.darker),
-              ), //Box one with container 1
+                child: Container(
+                    width: 500,
+                    height: 500,
+                    color: Apptheme.darker,
+                    child: LineChart(LineChartData(
+                        minX: minX,
+                        minY: minY,
+                        maxY: maxY,
+                        maxX: maxX,
+                        gridData: FlGridData(
+                          show: true,
+                          getDrawingHorizontalLine: (value) {
+                            return FlLine(
+                                color: Apptheme.light, strokeWidth: 0.5);
+                          },
+                          drawVerticalLine: true,
+                          getDrawingVerticalLine: (value) {
+                            return FlLine(
+                                color: Apptheme.light, strokeWidth: 0.5);
+                          },
+                        ),
+                        lineBarsData: [
+                          LineChartBarData(
+                            spots: z0Data,
+                            isCurved: true,
+                            color: Apptheme.accent,
+                          ),
+                          LineChartBarData(
+                            spots: y0Data,
+                            isCurved: true,
+                            color: Apptheme.light,
+                          )
+                        ]))),
+              ), //Box one with container 2
               SizedBox(width: 30, height: 5),
               SizedBox(
-                //Contains the First Container
+                //Contains the Second Container
                 width: 400,
                 height: 400,
                 child:
@@ -137,6 +188,27 @@ class _CoaxialScreen extends State<CoaxialScreen> {
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
                               'Y_0: ${y0.toStringAsExponential(2)}S',
+                              style: Apptheme.inputStyle,
+                            ),
+                          )
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          //Coaxial Capacitance per unit length
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'C: ${c.toStringAsExponential(2)}F/m',
+                              style: Apptheme.inputStyle,
+                            ),
+                          ),
+                          //Coaxial Inductance per unit length
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'L: ${l.toStringAsExponential(2)}H/m',
                               style: Apptheme.inputStyle,
                             ),
                           )
@@ -303,12 +375,39 @@ class _CoaxialScreen extends State<CoaxialScreen> {
                       phasevelocity = pvelocity(_epsilonr);
                       //Calculate Characteristic Impedance
                       z0 = coaxialwirecimp(_epsilonr, _b, _a);
+                      zvalues = [z0];
                       //Calculate Admittance (Y)
                       y0 = admittance(z0);
+                      //Calculate Capacitance per unit length C
+                      c = coacap(_b, _a, _epsilonr);
+                      //Calculate Inductance per unit length L
+                      l = coind(_b, _a);
+                      //Add current Values to list of points
+                      //z0Data.add(FlSpot(_b, z0));
+                      //y0Data.add(FlSpot(_b, y0));
+                      _addDataPoint(_b, z0, y0);
                     });
                   },
                   color: Apptheme.accent,
                   child: Text('CALCULATE'),
+                ),
+              ),
+              Padding(
+                //Padding for Two Wire Line Button
+                padding:
+                    const EdgeInsets.all(8.0), // Add padding around the button
+                child: MaterialButton(
+                  onPressed: () {
+                    setState(() {
+                      //Clear Graph Numbers
+                      z0Data.clear();
+                      y0Data.clear();
+                      //z0Data.add(FlSpot(0, 0));
+                      //y0Data.add(FlSpot(0, 0));
+                    });
+                  },
+                  color: Apptheme.accent,
+                  child: Text('CLEAR GRAPH'),
                 ),
               ),
             ],
@@ -332,4 +431,17 @@ class _CoaxialScreen extends State<CoaxialScreen> {
       fixedSize: Size(200, 50),
     );
   }
+
+  void _addDataPoint(double b, double z0, double y0) {
+    z0Data.add(FlSpot(b, z0));
+    y0Data.add(FlSpot(b, y0));
+
+    // Sort data points by x-value
+    z0Data.sort((a, b) => a.x.compareTo(b.x));
+    y0Data.sort((a, b) => a.x.compareTo(b.x));
+  }
 }
+
+
+//Line Graph for Z0 vs Radius
+
