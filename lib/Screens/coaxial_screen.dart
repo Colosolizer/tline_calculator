@@ -7,6 +7,8 @@ import 'package:tline_calculator/utils/calculator.dart';
 import 'package:tline_calculator/widgets/custom_slider.dart';
 import 'package:tline_calculator/widgets/custom_textfield.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter_titled_container/flutter_titled_container.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 //COAXIAL TRANSMISSION LINE SCREEN
 
@@ -69,6 +71,7 @@ class _CoaxialScreen extends State<CoaxialScreen> {
               width: 1000,
               height:
                   30), //Sizedbox creates space between the top of the app and the container
+
           Row(
             //Top Row of  Containers with Graph, Diagram and Outputs
             children: [
@@ -77,47 +80,62 @@ class _CoaxialScreen extends State<CoaxialScreen> {
                 //Contains the First Container
                 width: 400,
                 height: 400,
-                child: Container(
-                    width: 500,
-                    height: 500,
-                    color: Apptheme.darker,
-                    child: LineChart(LineChartData(
-                        minX: minX,
-                        minY: minY,
-                        maxY: maxY,
-                        maxX: maxX,
-                        gridData: FlGridData(
-                          show: true,
-                          getDrawingHorizontalLine: (value) {
-                            return FlLine(
-                                color: Apptheme.light, strokeWidth: 0.5);
-                          },
-                          drawVerticalLine: true,
-                          getDrawingVerticalLine: (value) {
-                            return FlLine(
-                                color: Apptheme.light, strokeWidth: 0.5);
-                          },
-                        ),
-                        lineBarsData: [
-                          LineChartBarData(
-                            spots: z0Data,
-                            isCurved: true,
-                            color: Apptheme.accent,
+                child: TitledContainer(
+                  title: 'Z0 vs b',
+                  textAlign: TextAlignTitledContainer.Center,
+                  titleColor: Apptheme.accent,
+                  backgroundColor: Colors.transparent,
+                  fontSize: 20.0,
+                  child: Container(
+                      width: 500,
+                      height: 500,
+                      color: Apptheme.darker,
+                      child: LineChart(LineChartData(
+                          minX: minX,
+                          minY: minY,
+                          maxY: maxY,
+                          maxX: maxX,
+                          gridData: FlGridData(
+                            show: true,
+                            getDrawingHorizontalLine: (value) {
+                              return FlLine(
+                                  color: Apptheme.light, strokeWidth: 0.5);
+                            },
+                            drawVerticalLine: true,
+                            getDrawingVerticalLine: (value) {
+                              return FlLine(
+                                  color: Apptheme.light, strokeWidth: 0.5);
+                            },
                           ),
-                          LineChartBarData(
-                            spots: y0Data,
-                            isCurved: true,
-                            color: Apptheme.light,
-                          )
-                        ]))),
+                          lineBarsData: [
+                            LineChartBarData(
+                              spots: z0Data,
+                              isCurved: true,
+                              color: Apptheme.accent,
+                            ),
+                            LineChartBarData(
+                              spots: y0Data,
+                              isCurved: true,
+                              color: Apptheme.light,
+                            )
+                          ]))),
+                ),
               ), //Box one with container 2
               SizedBox(width: 30, height: 5),
               SizedBox(
                 //Contains the Second Container
                 width: 400,
                 height: 400,
-                child:
-                    Container(width: 500, height: 500, color: Apptheme.darker),
+                child: Container(
+                  width: 500,
+                  height: 500,
+                  color: Apptheme.darker,
+                  child: SizedBox(
+                    height: 300,
+                    width: 300,
+                    child: Image.asset('assets/COAXIALIMAGEPNG.png'),
+                  ),
+                ),
               ), //Box one with container 2
               SizedBox(width: 30, height: 5),
               SizedBox(
@@ -306,7 +324,7 @@ class _CoaxialScreen extends State<CoaxialScreen> {
               ),
               Text(
                 //Showcases the Slider Value of L - Slider 2
-                "Outer Diameter: ${_b.toStringAsFixed(3)} mm",
+                "Outer Diameter b: ${_b.toStringAsFixed(3)} mm",
                 style: TextStyle(fontSize: 20, color: Apptheme.accent),
               ),
               Padding(
@@ -432,6 +450,7 @@ class _CoaxialScreen extends State<CoaxialScreen> {
     );
   }
 
+//Sorts graph points
   void _addDataPoint(double b, double z0, double y0) {
     z0Data.add(FlSpot(b, z0));
     y0Data.add(FlSpot(b, y0));
@@ -441,7 +460,3 @@ class _CoaxialScreen extends State<CoaxialScreen> {
     y0Data.sort((a, b) => a.x.compareTo(b.x));
   }
 }
-
-
-//Line Graph for Z0 vs Radius
-
