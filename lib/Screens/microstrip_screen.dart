@@ -1,9 +1,12 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:tline_calculator/Screens/coaxial_screen.dart';
 import 'package:tline_calculator/Screens/home_screen.dart';
 import 'package:tline_calculator/Screens/parallelplate_screen.dart';
 import 'package:tline_calculator/utils/app_styles.dart';
+import 'package:tline_calculator/utils/calculator.dart';
 import 'package:tline_calculator/widgets/custom_slider.dart';
+import 'package:tline_calculator/widgets/custom_textfield.dart';
 
 //MICROSTRIP TRANSMISSION LINE SCREEN
 
@@ -17,8 +20,47 @@ class MicrostripScreen extends StatefulWidget {
 class _MicrostripScreen extends State<MicrostripScreen> {
   //Variables for Sliders
   double _currentvalue = 0;
+  String erstring = '';
+  double _epsilonr = 0;
+  String freqtext = '';
+  double _freq = 0.0;
+  double w = 0.0;
+  String p_constanttext = '';
+  double phaseconstant = 0.0;
+  double phasevelocity = 0.0;
+  double z0 = 0.0;
+  double y0 = 0.0;
+  double c = 0.0;
+  double l = 0.0;
+  double h = 0.0;
+  double t = 0.0;
+  double wd = 0.0;
+  String hstring = '';
+  String wdstring = '';
+  String tstring = '';
+  List zvalues = [];
+  List<FlSpot> z0Data = [];
+  List<FlSpot> y0Data = [];
+
+  final TextEditingController wdController = TextEditingController();
+  final TextEditingController hController = TextEditingController();
+  final TextEditingController tController = TextEditingController();
+  final TextEditingController freqController = TextEditingController();
+  final TextEditingController erController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    // Calculate min and max for dynamic scaling
+    double minX = z0Data.isNotEmpty ? z0Data.first.x : 0;
+    double maxX = z0Data.isNotEmpty ? z0Data.last.x : 10;
+
+    // Check if z0Data is not empty before calculating minY and maxY
+    double minY = z0Data.isNotEmpty
+        ? z0Data.map((e) => e.y).reduce((a, b) => a < b ? a : b)
+        : 0; // Default value if empty
+
+    double maxY = z0Data.isNotEmpty
+        ? z0Data.map((e) => e.y).reduce((a, b) => a > b ? a : b)
+        : 10; // Default value if empty
     return Scaffold(
       backgroundColor: Apptheme.dark,
       body: Column(
@@ -118,210 +160,124 @@ class _MicrostripScreen extends State<MicrostripScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                //Showcases the Slider Value of R - Slider 1
-                //_currentvalue.toString(),
-                "Microstrip Line",
-
-                style: TextStyle(fontSize: 20, color: Apptheme.accent),
-              ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Slider(
-                  value: _currentvalue,
-                  min: 0,
-                  max: 10,
-                  divisions: 10,
-                  activeColor: Apptheme.accent,
-                  thumbColor: Apptheme.accent,
-                  inactiveColor: Apptheme.darker,
-                  onChanged: (value) {
-                    setState(() {
-                      _currentvalue = value;
-                    });
-                  },
+                child: SizedBox(
+                  width: 200,
+                  height: 80,
+                  child: CustomTextfield(
+                      maxLength: 5,
+                      maxLines: 1,
+                      hintText: 'Width - w(mm)',
+                      controller: wdController),
                 ),
               ),
-              Text(
-                //Showcases the Slider Value of L - Slider 2
-                _currentvalue.toString(),
-                style: TextStyle(fontSize: 20, color: Apptheme.accent),
-              ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Slider(
-                  value: _currentvalue,
-                  min: 0,
-                  max: 10,
-                  divisions: 10,
-                  activeColor: Apptheme.accent,
-                  thumbColor: Apptheme.accent,
-                  inactiveColor: Apptheme.darker,
-                  onChanged: (value) {
-                    setState(() {
-                      _currentvalue = value;
-                    });
-                  },
+                child: SizedBox(
+                  width: 200,
+                  height: 80,
+                  child: CustomTextfield(
+                      maxLength: 5,
+                      maxLines: 1,
+                      hintText: 'Height - h(mm)',
+                      controller: hController),
                 ),
               ),
-              Text(
-                //Showcases the Slider Value of G - Slider 3
-                _currentvalue.toString(),
-                style: TextStyle(fontSize: 20, color: Apptheme.accent),
-              ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Slider(
-                  value: _currentvalue,
-                  min: 0,
-                  max: 10,
-                  divisions: 10,
-                  activeColor: Apptheme.accent,
-                  thumbColor: Apptheme.accent,
-                  inactiveColor: Apptheme.darker,
-                  onChanged: (value) {
-                    setState(() {
-                      _currentvalue = value;
-                    });
-                  },
-                ),
-              ),
-              Text(
-                //Showcases the Slider Value of C - Slider 4
-                _currentvalue.toString(),
-                style: TextStyle(fontSize: 20, color: Apptheme.accent),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Slider(
-                  value: _currentvalue,
-                  min: 0,
-                  max: 10,
-                  divisions: 10,
-                  activeColor: Apptheme.accent,
-                  thumbColor: Apptheme.accent,
-                  inactiveColor: Apptheme.darker,
-                  onChanged: (value) {
-                    setState(() {
-                      _currentvalue = value;
-                    });
-                  },
-                ),
-              ),
-              Text(
-                //Showcases the Slider Value of D - Slider 5
-                _currentvalue.toString(),
-                style: TextStyle(fontSize: 20, color: Apptheme.accent),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Slider(
-                  value: _currentvalue,
-                  min: 0,
-                  max: 10,
-                  divisions: 10,
-                  activeColor: Apptheme.accent,
-                  thumbColor: Apptheme.accent,
-                  inactiveColor: Apptheme.darker,
-                  onChanged: (value) {
-                    setState(() {
-                      _currentvalue = value;
-                    });
-                  },
+                child: SizedBox(
+                  width: 200,
+                  height: 80,
+                  child: CustomTextfield(
+                      maxLength: 5,
+                      maxLines: 1,
+                      hintText: 'Trace - t(mm)',
+                      controller: tController),
                 ),
               ),
             ],
           ),
           //ROW 4 WITH SECOND SET OF SLIDERS
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Text(
-              //Showcases the Slider Value of Frequency - Slider 6
-              _currentvalue.toString(),
-              style: TextStyle(fontSize: 20, color: Apptheme.accent),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                width: 200,
+                height: 55,
+                child: CustomTextfield(
+                    maxLength: 5,
+                    maxLines: 1,
+                    hintText: 'ϵ_r',
+                    controller: erController),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Slider(
-                value: _currentvalue,
-                min: 0,
-                max: 10,
-                divisions: 10,
-                activeColor: Apptheme.accent,
-                thumbColor: Apptheme.accent,
-                inactiveColor: Apptheme.darker,
-                onChanged: (value) {
-                  setState(() {
-                    _currentvalue = value;
-                  });
-                },
+              child: SizedBox(
+                width: 200,
+                height: 55,
+                child: CustomTextfield(
+                    maxLength: 5,
+                    maxLines: 1,
+                    hintText: 'Frequency (Hz)',
+                    controller: freqController),
               ),
-            ),
-            Text(
-              //Showcases the Slider Value of Epsilon_R - Slider 7
-              _currentvalue.toString(),
-              style: TextStyle(fontSize: 20, color: Apptheme.accent),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Slider(
-                value: _currentvalue,
-                min: 0,
-                max: 10,
-                divisions: 10,
-                activeColor: Apptheme.accent,
-                thumbColor: Apptheme.accent,
-                inactiveColor: Apptheme.darker,
-                onChanged: (value) {
+              //Padding for Two Wire Line Button
+              padding:
+                  const EdgeInsets.all(8.0), // Add padding around the button
+              child: MaterialButton(
+                onPressed: () {
                   setState(() {
-                    _currentvalue = value;
+                    //Calculates Frequency and Angular Frequency
+                    freqtext = freqController.text;
+                    _freq = double.tryParse(freqtext) ?? 0.0;
+                    w = afrequency(_freq);
+                    //Calculates Beta (Phase Constant)
+                    erstring = erController.text;
+                    _epsilonr = double.tryParse(erstring) ?? 0.0;
+                    phaseconstant = pconstant(_freq, _epsilonr);
+                    //Calculates Phase Velocity
+                    phasevelocity = pvelocity(_epsilonr);
+                    //Calculate Characteristic Impedance
+                    z0 = microstriplineimp(h, t, wd, _epsilonr);
+                    zvalues = [z0];
+                    //Calculate Admittance (Y)
+                    y0 = admittance(z0);
+                    //Calculate Capacitance per unit length C
+                    c = coacap(_b, _a, _epsilonr);
+                    //Calculate Inductance per unit length L
+                    l = coind(_b, _a);
+                    //Add current Values to list of points
+                    //z0Data.add(FlSpot(_b, z0));
+                    //y0Data.add(FlSpot(_b, y0));
+                    _addDataPoint(_b, z0, y0);
                   });
                 },
+                color: Apptheme.accent,
+                child: Text('CALCULATE'),
               ),
-            ),
-            Text(
-              //Showcases the Slider Value of Mu - Slider 8
-              _currentvalue.toString(),
-              style: TextStyle(fontSize: 20, color: Apptheme.accent),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Slider(
-                value: _currentvalue,
-                min: 0,
-                max: 10,
-                divisions: 10,
-                activeColor: Apptheme.accent,
-                thumbColor: Apptheme.accent,
-                inactiveColor: Apptheme.darker,
-                onChanged: (value) {
+              //Padding for Two Wire Line Button
+              padding:
+                  const EdgeInsets.all(8.0), // Add padding around the button
+              child: MaterialButton(
+                onPressed: () {
                   setState(() {
-                    _currentvalue = value;
+                    //Clear Graph Numbers
+                    z0Data.clear();
+                    y0Data.clear();
+                    //z0Data.add(FlSpot(0, 0));
+                    //y0Data.add(FlSpot(0, 0));
                   });
                 },
+                color: Apptheme.accent,
+                child: Text('CLEAR GRAPH'),
               ),
             ),
-            Text(
-              //Showcases the Slider Value of Sigma - Slider 9
-              _currentvalue.toString(),
-              style: TextStyle(fontSize: 20, color: Apptheme.accent),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Slider(
-                value: _currentvalue,
-                min: 0,
-                max: 10,
-                divisions: 10,
-                activeColor: Apptheme.accent,
-                thumbColor: Apptheme.accent,
-                inactiveColor: Apptheme.darker,
-                onChanged: (value) {
-                  setState(() {
-                    _currentvalue = value;
-                  });
-                },
-              ),
-            )
           ])
         ],
       ),
@@ -341,5 +297,15 @@ class _MicrostripScreen extends State<MicrostripScreen> {
       elevation: 5.0,
       fixedSize: Size(200, 50),
     );
+  }
+
+  //Sorts graph points
+  void _addDataPoint(double b, double z0, double y0) {
+    z0Data.add(FlSpot(b, z0));
+    y0Data.add(FlSpot(b, y0));
+
+    // Sort data points by x-value
+    z0Data.sort((a, b) => a.x.compareTo(b.x));
+    y0Data.sort((a, b) => a.x.compareTo(b.x));
   }
 }

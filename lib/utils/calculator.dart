@@ -44,8 +44,8 @@ double coaxialwirecimp(double er, double b, double a) {
 
 //Calculates Characteristic Impedance (Micro Strip Line )
 
-double microstriplineimp(double L, double C) {
-  double z_0 = sqrt(L / C);
+double microstriplineimp(double h, double t, double w, double er) {
+  double z_0 = (87 / (sqrt(er + 1.41))) * log((5.98 * h) / (0.8 * w + t));
   return z_0;
 }
 
@@ -149,4 +149,40 @@ double coind(double b, double a) {
 double copdelay(double p) {
   double t = 1 / p;
   return t;
+}
+
+//Two Wire Specific Functions
+
+//Capacitance per unit length of a Two Wire TM Line
+double twocap(double D, double d1, double er) {
+  double r = d1 / 2;
+  double cap = (2 * pi * er) / (log(D / (r)));
+  return cap;
+}
+
+//Inductance per unit length of a Two Wire TM Line
+double twoind(double m, double D, double d1) {
+  double r = d1 / 2;
+  double mu_t = mu * m;
+  double ind = (mu_t / pi) / (log(D / r));
+  return ind;
+}
+////////////////////////////////
+
+//Parallel Plate Specific Functions
+
+//Capacitance per unit length of a Parallel Plate TM Line
+
+double paracap(double er, double w, double l, double h) {
+  double e = er * e0;
+  double cap = (e * w * h) / l;
+  return cap;
+}
+
+//Inductance per unit length of a Prallel Plate TM Line
+
+double paraind(double m, double l, double w, double h) {
+  double m_t = m * mu;
+  double ind = (m_t * l) / (w * l);
+  return ind;
 }

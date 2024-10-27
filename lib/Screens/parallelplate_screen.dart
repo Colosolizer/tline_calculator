@@ -1,9 +1,13 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_titled_container/flutter_titled_container.dart';
 import 'package:tline_calculator/Screens/coaxial_screen.dart';
 import 'package:tline_calculator/Screens/home_screen.dart';
 import 'package:tline_calculator/Screens/microstrip_screen.dart';
 import 'package:tline_calculator/utils/app_styles.dart';
+import 'package:tline_calculator/utils/calculator.dart';
 import 'package:tline_calculator/widgets/custom_slider.dart';
+import 'package:tline_calculator/widgets/custom_textfield.dart';
 
 //PARALLEL PLATE TRANSMISSION LINE SCREEN
 
@@ -17,8 +21,51 @@ class ParallelplateScreen extends StatefulWidget {
 class _ParallelplateScreen extends State<ParallelplateScreen> {
   //Variables for Sliders
   double _currentvalue = 0;
+  String erstring = '';
+  double _epsilonr = 0.0;
+  String freqtext = '';
+  double _freq = 0.0;
+  double w = 0.0; //angular frequency
+  String p_constanttext = '';
+  double phaseconstant = 0.0;
+  double phasevelocity = 0.0;
+  double z0 = 0.0;
+  double y0 = 0.0;
+  double c = 0.0;
+  double l = 0.0;
+  double wd = 0.0;
+  double h = 0.0;
+  double mu_r = 0.0;
+  double len = 0.0;
+  String wtext = '';
+  String htext = '';
+  String lentext = '';
+  String murtext = '';
+  List zvalues = [];
+  List<FlSpot> z0Data = [];
+  List<FlSpot> y0Data = [];
+
+  final TextEditingController erController = TextEditingController();
+  final TextEditingController freqController = TextEditingController();
+  final TextEditingController hController = TextEditingController();
+  final TextEditingController wController = TextEditingController();
+  final TextEditingController lenController = TextEditingController();
+  final TextEditingController murController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    // Calculate min and max for dynamic scaling
+    double minX = z0Data.isNotEmpty ? z0Data.first.x : 0;
+    double maxX = z0Data.isNotEmpty ? z0Data.last.x : 10;
+
+    // Check if z0Data is not empty before calculating minY and maxY
+    double minY = z0Data.isNotEmpty
+        ? z0Data.map((e) => e.y).reduce((a, b) => a < b ? a : b)
+        : 0; // Default value if empty
+
+    double maxY = z0Data.isNotEmpty
+        ? z0Data.map((e) => e.y).reduce((a, b) => a > b ? a : b)
+        : 10; // Default value if empty
+
     return Scaffold(
       backgroundColor: Apptheme.dark,
       body: Column(
@@ -36,24 +83,163 @@ class _ParallelplateScreen extends State<ParallelplateScreen> {
                 //Contains the First Container
                 width: 400,
                 height: 400,
-                child:
-                    Container(width: 500, height: 500, color: Apptheme.darker),
+                child: Container(
+                  width: 500,
+                  height: 500,
+                  color: Apptheme.darker,
+                  child: TitledContainer(
+                    title: 'Z0 vs h',
+                    textAlign: TextAlignTitledContainer.Center,
+                    titleColor: Apptheme.accent,
+                    backgroundColor: Colors.transparent,
+                    fontSize: 20.0,
+                    child: Container(
+                        width: 500,
+                        height: 500,
+                        color: Apptheme.darker,
+                        child: LineChart(LineChartData(
+                            minX: minX,
+                            minY: minY,
+                            maxY: maxY,
+                            maxX: maxX,
+                            gridData: FlGridData(
+                              show: true,
+                              getDrawingHorizontalLine: (value) {
+                                return FlLine(
+                                    color: Apptheme.light, strokeWidth: 0.5);
+                              },
+                              drawVerticalLine: true,
+                              getDrawingVerticalLine: (value) {
+                                return FlLine(
+                                    color: Apptheme.light, strokeWidth: 0.5);
+                              },
+                            ),
+                            lineBarsData: [
+                              LineChartBarData(
+                                spots: z0Data,
+                                isCurved: true,
+                                color: Apptheme.accent,
+                              ),
+                              /*
+                              LineChartBarData(
+                                spots: y0Data,
+                                isCurved: true,
+                                color: Apptheme.light,
+                              )*/
+                            ]))),
+                  ),
+                ),
               ), //Box one with container 1
               SizedBox(width: 30, height: 5),
               SizedBox(
-                //Contains the First Container
+                //Contains the second Container
                 width: 400,
                 height: 400,
-                child:
-                    Container(width: 500, height: 500, color: Apptheme.darker),
+                child: Container(
+                  width: 500,
+                  height: 500,
+                  color: Apptheme.darker,
+                  child: Image.asset('assets/PARALLEL_PLATE_IMAGE.png'),
+                ),
               ), //Box one with container 2
               SizedBox(width: 30, height: 5),
               SizedBox(
-                //Contains the First Container
+                //Contains the third Container
                 width: 400,
                 height: 400,
-                child:
-                    Container(width: 500, height: 500, color: Apptheme.darker),
+                child: Container(
+                  width: 500,
+                  height: 500,
+                  color: Apptheme.darker,
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          //Showcases Frequency
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Frequency: $_freq',
+                              style: Apptheme.inputStyle,
+                            ),
+                          ),
+                          //Showcases Angular Frequency (w)
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'w: ${w.toStringAsFixed(2)}rad/s',
+                              style: Apptheme.inputStyle,
+                            ),
+                          )
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          //Phase Constant
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'β: ${phaseconstant.toStringAsExponential(2)}rad/m',
+                              style: Apptheme.inputStyle,
+                            ),
+                          ),
+                          //Phase Velocity (u_p)
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'u_p: ${phasevelocity.toStringAsExponential(2)}m/s',
+                              style: Apptheme.inputStyle,
+                            ),
+                          )
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          //Characteristic Impedance (Z_0)
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Z_0: ${z0.toStringAsFixed(2)}ohm wd: $len',
+                              style: Apptheme.inputStyle,
+                            ),
+                          ),
+                          //Admittance
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Y_0: ${y0.toStringAsExponential(2)}S',
+                              style: Apptheme.inputStyle,
+                            ),
+                          )
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          //Coaxial Capacitance per unit length
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'C: ${c.toStringAsExponential(2)}F/m',
+                              style: Apptheme.inputStyle,
+                            ),
+                          ),
+                          //Coaxial Inductance per unit length
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'L: ${l.toStringAsExponential(2)}H/m',
+                              style: Apptheme.inputStyle,
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ) //Box one with container 3
             ],
           ), //END OF TOP ROW
@@ -118,208 +304,147 @@ class _ParallelplateScreen extends State<ParallelplateScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                //Showcases the Slider Value of R - Slider 1
-                //_currentvalue.toString(),
-                "Parallel Plate",
-
-                style: TextStyle(fontSize: 20, color: Apptheme.accent),
-              ),
               Padding(
+                //Text Field for Distance between the two wires
                 padding: const EdgeInsets.all(8.0),
-                child: Slider(
-                  value: _currentvalue,
-                  min: 0,
-                  max: 10,
-                  divisions: 10,
-                  activeColor: Apptheme.accent,
-                  thumbColor: Apptheme.accent,
-                  inactiveColor: Apptheme.darker,
-                  onChanged: (value) {
-                    setState(() {
-                      _currentvalue = value;
-                    });
-                  },
+                child: SizedBox(
+                  width: 200,
+                  height: 80,
+                  child: CustomTextfield(
+                      maxLength: 5,
+                      maxLines: 1,
+                      hintText: 'Height - h (mm)',
+                      controller: hController),
                 ),
               ),
-              Text(
-                //Showcases the Slider Value of L - Slider 2
-                _currentvalue.toString(),
-                style: TextStyle(fontSize: 20, color: Apptheme.accent),
-              ),
               Padding(
+                //Text Field for Distance between the two wires
                 padding: const EdgeInsets.all(8.0),
-                child: Slider(
-                  value: _currentvalue,
-                  min: 0,
-                  max: 10,
-                  divisions: 10,
-                  activeColor: Apptheme.accent,
-                  thumbColor: Apptheme.accent,
-                  inactiveColor: Apptheme.darker,
-                  onChanged: (value) {
-                    setState(() {
-                      _currentvalue = value;
-                    });
-                  },
+                child: SizedBox(
+                  width: 200,
+                  height: 80,
+                  child: CustomTextfield(
+                      maxLength: 5,
+                      maxLines: 1,
+                      hintText: 'Width - w (mm)',
+                      controller: wController),
                 ),
               ),
-              Text(
-                //Showcases the Slider Value of G - Slider 3
-                _currentvalue.toString(),
-                style: TextStyle(fontSize: 20, color: Apptheme.accent),
-              ),
               Padding(
+                //Text Field for Distance between the two wires
                 padding: const EdgeInsets.all(8.0),
-                child: Slider(
-                  value: _currentvalue,
-                  min: 0,
-                  max: 10,
-                  divisions: 10,
-                  activeColor: Apptheme.accent,
-                  thumbColor: Apptheme.accent,
-                  inactiveColor: Apptheme.darker,
-                  onChanged: (value) {
-                    setState(() {
-                      _currentvalue = value;
-                    });
-                  },
+                child: SizedBox(
+                  width: 200,
+                  height: 80,
+                  child: CustomTextfield(
+                      maxLength: 5,
+                      maxLines: 1,
+                      hintText: 'Length - len (m)',
+                      controller: lenController),
                 ),
-              ),
-              Text(
-                //Showcases the Slider Value of C - Slider 4
-                _currentvalue.toString(),
-                style: TextStyle(fontSize: 20, color: Apptheme.accent),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Slider(
-                  value: _currentvalue,
-                  min: 0,
-                  max: 10,
-                  divisions: 10,
-                  activeColor: Apptheme.accent,
-                  thumbColor: Apptheme.accent,
-                  inactiveColor: Apptheme.darker,
-                  onChanged: (value) {
-                    setState(() {
-                      _currentvalue = value;
-                    });
-                  },
-                ),
-              ),
-              Text(
-                //Showcases the Slider Value of D - Slider 5
-                _currentvalue.toString(),
-                style: TextStyle(fontSize: 20, color: Apptheme.accent),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Slider(
-                  value: _currentvalue,
-                  min: 0,
-                  max: 10,
-                  divisions: 10,
-                  activeColor: Apptheme.accent,
-                  thumbColor: Apptheme.accent,
-                  inactiveColor: Apptheme.darker,
-                  onChanged: (value) {
-                    setState(() {
-                      _currentvalue = value;
-                    });
-                  },
-                ),
-              ),
+              )
             ],
           ),
-          //ROW 4 WITH SECOND SET OF SLIDERS
+          //ROW 4 WITH SECOND SET OF TEXT FIELDS
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Text(
-              //Showcases the Slider Value of Frequency - Slider 6
-              _currentvalue.toString(),
-              style: TextStyle(fontSize: 20, color: Apptheme.accent),
-            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Slider(
-                value: _currentvalue,
-                min: 0,
-                max: 10,
-                divisions: 10,
-                activeColor: Apptheme.accent,
-                thumbColor: Apptheme.accent,
-                inactiveColor: Apptheme.darker,
-                onChanged: (value) {
-                  setState(() {
-                    _currentvalue = value;
-                  });
-                },
+              child: SizedBox(
+                width: 200,
+                height: 55,
+                child: CustomTextfield(
+                    maxLength: 5,
+                    maxLines: 1,
+                    hintText: 'ϵ_r',
+                    controller: erController),
               ),
             ),
-            Text(
-              //Showcases the Slider Value of Epsilon_R - Slider 7
-              _currentvalue.toString(),
-              style: TextStyle(fontSize: 20, color: Apptheme.accent),
-            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Slider(
-                value: _currentvalue,
-                min: 0,
-                max: 10,
-                divisions: 10,
-                activeColor: Apptheme.accent,
-                thumbColor: Apptheme.accent,
-                inactiveColor: Apptheme.darker,
-                onChanged: (value) {
-                  setState(() {
-                    _currentvalue = value;
-                  });
-                },
+              child: SizedBox(
+                width: 200,
+                height: 55,
+                child: CustomTextfield(
+                    maxLength: 5,
+                    maxLines: 1,
+                    hintText: 'Frequency (Hz)',
+                    controller: freqController),
               ),
             ),
-            Text(
-              //Showcases the Slider Value of Mu - Slider 8
-              _currentvalue.toString(),
-              style: TextStyle(fontSize: 20, color: Apptheme.accent),
-            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Slider(
-                value: _currentvalue,
-                min: 0,
-                max: 10,
-                divisions: 10,
-                activeColor: Apptheme.accent,
-                thumbColor: Apptheme.accent,
-                inactiveColor: Apptheme.darker,
-                onChanged: (value) {
-                  setState(() {
-                    _currentvalue = value;
-                  });
-                },
+              child: SizedBox(
+                width: 200,
+                height: 55,
+                child: CustomTextfield(
+                    maxLength: 5,
+                    maxLines: 1,
+                    hintText: 'μ_r',
+                    controller: murController),
               ),
             ),
-            Text(
-              //Showcases the Slider Value of Sigma - Slider 9
-              _currentvalue.toString(),
-              style: TextStyle(fontSize: 20, color: Apptheme.accent),
-            ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Slider(
-                value: _currentvalue,
-                min: 0,
-                max: 10,
-                divisions: 10,
-                activeColor: Apptheme.accent,
-                thumbColor: Apptheme.accent,
-                inactiveColor: Apptheme.darker,
-                onChanged: (value) {
+              //Padding for Two Wire Line Button
+              padding:
+                  const EdgeInsets.all(8.0), // Add padding around the button
+              child: MaterialButton(
+                onPressed: () {
                   setState(() {
-                    _currentvalue = value;
+                    //Gets Values for h and w
+                    wtext = wController.text;
+                    wd = double.tryParse(wtext) ?? 0.0;
+                    htext = hController.text;
+                    h = double.tryParse(htext) ?? 0.0;
+                    lentext = lenController.text;
+                    len = double.tryParse(lentext) ?? 0.0;
+                    murtext = murController.text;
+                    mu_r = double.tryParse(murtext) ?? 0.0;
+                    //Calculates Frequency and Angular Frequency
+                    freqtext = freqController.text;
+                    _freq = double.tryParse(freqtext) ?? 0.0;
+                    w = afrequency(_freq);
+                    //Calculates Beta (Phase Constant)
+                    erstring = erController.text;
+                    _epsilonr = double.tryParse(erstring) ?? 0.0;
+                    phaseconstant = pconstant(_freq, _epsilonr);
+                    //Calculates Phase Velocity
+                    phasevelocity = pvelocity(_epsilonr);
+                    //Calculate Characteristic Impedance
+                    z0 = parallelplateimp(_epsilonr, h, wd);
+                    zvalues = [z0];
+                    //Calculate Admittance (Y)
+                    y0 = admittance(z0);
+                    //Calculate Capacitance per unit length C
+                    c = paracap(_epsilonr, wd, len, h);
+
+                    //Calculate Inductance per unit length L
+                    l = paraind(mu_r, len, wd, h);
+                    //Add current Values to list of points
+                    //z0Data.add(FlSpot(_b, z0));
+                    //y0Data.add(FlSpot(_b, y0));
+                    _addDataPoint(h, z0, y0);
                   });
                 },
+                color: Apptheme.accent,
+                child: Text('CALCULATE'),
+              ),
+            ),
+            Padding(
+              //Padding for Two Wire Line Button
+              padding:
+                  const EdgeInsets.all(8.0), // Add padding around the button
+              child: MaterialButton(
+                onPressed: () {
+                  setState(() {
+                    //Clear Graph Numbers
+                    z0Data.clear();
+                    y0Data.clear();
+                    //z0Data.add(FlSpot(0, 0));
+                    //y0Data.add(FlSpot(0, 0));
+                  });
+                },
+                color: Apptheme.accent,
+                child: Text('CLEAR GRAPH'),
               ),
             )
           ])
@@ -341,5 +466,15 @@ class _ParallelplateScreen extends State<ParallelplateScreen> {
       elevation: 5.0,
       fixedSize: Size(200, 50),
     );
+  }
+
+  //Sorts graph points
+  void _addDataPoint(double b, double z0, double y0) {
+    z0Data.add(FlSpot(b, z0));
+    y0Data.add(FlSpot(b, y0));
+
+    // Sort data points by x-value
+    z0Data.sort((a, b) => a.x.compareTo(b.x));
+    y0Data.sort((a, b) => a.x.compareTo(b.x));
   }
 }
