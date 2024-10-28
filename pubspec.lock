@@ -49,6 +49,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.18.0"
+  complex_num:
+    dependency: "direct main"
+    description:
+      name: complex_num
+      sha256: a57c3360684ae2b1ace1e965b9b0ca6e9903b0c54c44dbf4cf8369ad19f0658e
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   cupertino_icons:
     dependency: "direct main"
     description:

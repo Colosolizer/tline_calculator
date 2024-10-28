@@ -1,9 +1,11 @@
+import 'package:complex_num/complex_num.dart';
 import 'package:flutter/material.dart';
 import 'package:tline_calculator/Screens/home_screen.dart';
 import 'package:tline_calculator/Screens/microstrip_screen.dart';
 import 'package:tline_calculator/Screens/parallelplate_screen.dart';
 import 'package:tline_calculator/utils/app_styles.dart';
 import 'package:tline_calculator/utils/calculator.dart';
+import 'package:tline_calculator/utils/complex.dart';
 import 'package:tline_calculator/widgets/custom_textfield.dart';
 
 class GeneralScreen extends StatefulWidget {
@@ -23,8 +25,29 @@ class _GeneralScreenState extends State<GeneralScreen> {
   String p_constanttext = '';
   double phaseconstant = 0.0;
   double phasevelocity = 0.0;
+  Complex z0 = Complex(0, 0);
+  double y0 = 0.0;
+  double ref = 0.0;
+  double alpha = 0.0;
+  //Inputs
+  double R = 0.0;
+  String rstring = '';
+  double L = 0.0;
+  String lstring = '';
+  double G = 0.0;
+  String gstring = '';
+  double C = 0.0;
+  String cstring = '';
+  double mu_r = 0.0;
+  String mustring = '';
+  ////////
   final TextEditingController erController = TextEditingController();
   final TextEditingController freqController = TextEditingController();
+  final TextEditingController resController = TextEditingController();
+  final TextEditingController capController = TextEditingController();
+  final TextEditingController indController = TextEditingController();
+  final TextEditingController condController = TextEditingController();
+  final TextEditingController muController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +76,7 @@ class _GeneralScreenState extends State<GeneralScreen> {
                                 maxLength: 5,
                                 maxLines: 1,
                                 hintText: 'Resistance - R(ohms)',
-                                controller: freqController),
+                                controller: resController),
                           ),
                         ),
                         Padding(
@@ -65,7 +88,7 @@ class _GeneralScreenState extends State<GeneralScreen> {
                                 maxLength: 5,
                                 maxLines: 1,
                                 hintText: 'Inductance - L (H)',
-                                controller: freqController),
+                                controller: indController),
                           ),
                         ),
                         Padding(
@@ -77,6 +100,18 @@ class _GeneralScreenState extends State<GeneralScreen> {
                                 maxLength: 5,
                                 maxLines: 1,
                                 hintText: 'Conductance - G (Hz)',
+                                controller: condController),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SizedBox(
+                            width: 200,
+                            height: 80,
+                            child: CustomTextfield(
+                                maxLength: 5,
+                                maxLines: 1,
+                                hintText: 'Frequency - f(Hz)',
                                 controller: freqController),
                           ),
                         ),
@@ -93,7 +128,7 @@ class _GeneralScreenState extends State<GeneralScreen> {
                                 maxLength: 5,
                                 maxLines: 1,
                                 hintText: 'Capacitance - C (Hz)',
-                                controller: freqController),
+                                controller: capController),
                           ),
                         ),
                         Padding(
@@ -105,7 +140,7 @@ class _GeneralScreenState extends State<GeneralScreen> {
                                 maxLength: 5,
                                 maxLines: 1,
                                 hintText: 'ϵ_r',
-                                controller: freqController),
+                                controller: erController),
                           ),
                         ),
                         Padding(
@@ -117,7 +152,7 @@ class _GeneralScreenState extends State<GeneralScreen> {
                                 maxLength: 5,
                                 maxLines: 1,
                                 hintText: 'μ_r',
-                                controller: freqController),
+                                controller: muController),
                           ),
                         ),
                       ],
@@ -193,6 +228,14 @@ class _GeneralScreenState extends State<GeneralScreen> {
                               onPressed: () {
                                 setState(() {
                                   //Gets Values in Text Boxes
+                                  rstring = resController.text;
+                                  R = double.tryParse(rstring) ?? 0.0;
+                                  cstring = capController.text;
+                                  C = double.tryParse(cstring) ?? 0.0;
+                                  lstring = indController.text;
+                                  L = double.tryParse(lstring) ?? 0.0;
+                                  gstring = condController.text;
+                                  G = double.tryParse(gstring) ?? 0.0;
 
                                   //Calculates Frequency and Angular Frequency
                                   freqtext = freqController.text;
@@ -205,6 +248,7 @@ class _GeneralScreenState extends State<GeneralScreen> {
                                   //Calculates Phase Velocity
                                   phasevelocity = pvelocity(_epsilonr);
                                   //Calculate Characteristic Impedance
+                                  z0 = zgeneral(R, L, G, C, w);
                                 });
                               },
                               color: Apptheme.accent,
@@ -248,7 +292,7 @@ class _GeneralScreenState extends State<GeneralScreen> {
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Text(
-                                          'Frequency: $_freq',
+                                          'Z0: ${z0.toString()}ohms',
                                           style: Apptheme.inputStyle,
                                         ),
                                       ),
@@ -256,7 +300,7 @@ class _GeneralScreenState extends State<GeneralScreen> {
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Text(
-                                          'w: ${w.toStringAsFixed(2)}rad/s',
+                                          'Y0: ${y0.toStringAsExponential(2)}S',
                                           style: Apptheme.inputStyle,
                                         ),
                                       )
@@ -269,7 +313,7 @@ class _GeneralScreenState extends State<GeneralScreen> {
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Text(
-                                          'β: ${phaseconstant.toStringAsExponential(2)}rad/m',
+                                          '|Γ|: ${phaseconstant.toStringAsExponential(2)}',
                                           style: Apptheme.inputStyle,
                                         ),
                                       ),
@@ -277,7 +321,7 @@ class _GeneralScreenState extends State<GeneralScreen> {
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Text(
-                                          'u_p: ${phasevelocity.toStringAsExponential(2)}m/s',
+                                          ' α: ${phasevelocity.toStringAsExponential(2)}m/s',
                                           style: Apptheme.inputStyle,
                                         ),
                                       )

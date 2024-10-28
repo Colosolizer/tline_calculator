@@ -2,6 +2,8 @@
 
 //Two Wire Line Calculator Functions
 
+import 'dart:async';
+
 import 'package:tline_calculator/utils/constant.dart';
 import 'dart:math';
 
@@ -56,6 +58,7 @@ double parallelplateimp(double er, double h, double w) {
   return z_0;
 }
 
+/*
 //Calculates Characteristic Impedance (General Case)
 
 Complex generalimp(double R, double C, double L, double G, double w) {
@@ -65,60 +68,13 @@ Complex generalimp(double R, double C, double L, double G, double w) {
   Complex z_0 = num3.sqrtc();
   return z_0;
 }
+*/
 
 //Calculates Admittance
 
 double admittance(double z) {
   double y = 1 / z;
   return y;
-}
-
-//For Complex Number Division
-class Complex {
-  final double real;
-  final double imaginary;
-
-  Complex(this.real, this.imaginary);
-
-  // Method to add two complex numbers
-  Complex operator +(Complex other) {
-    return Complex(real + other.real, imaginary + other.imaginary);
-  }
-
-  // Method to multiply two complex numbers
-  Complex operator *(Complex other) {
-    return Complex(
-      real * other.real - imaginary * other.imaginary,
-      real * other.imaginary + imaginary * other.real,
-    );
-  }
-
-  // Method to divide two complex numbers
-  Complex operator /(Complex other) {
-    double denominator =
-        other.real * other.real + other.imaginary * other.imaginary;
-    return Complex(
-      (real * other.real + imaginary * other.imaginary) / denominator,
-      (imaginary * other.real - real * other.imaginary) / denominator,
-    );
-  }
-
-  Complex sqrtc() {
-    double r = sqrt(real * real + imaginary * imaginary); // Magnitude
-    double theta = atan2(imaginary, real); // Angle
-    double sqrtR = sqrt(r); // Square root of magnitude
-
-    return Complex(
-      sqrtR * cos(theta / 2), // Real part
-      sqrtR * sin(theta / 2), // Imaginary part
-    );
-  }
-
-  // Method to get the string representation of a complex number
-  @override
-  String toString() {
-    return '${real} + ${imaginary}j';
-  }
 }
 
 //Coaxial Specific Formula Functions
@@ -182,8 +138,8 @@ double paracap(double er, double w, double l, double h) {
 //Inductance per unit length of a Prallel Plate TM Line in m
 
 double paraind(double m, double l, double w, double h) {
-  double m_t = m * mu;
-  double ind = (m_t * l) / ((w / 1000) * l);
+  double mt = m * mu;
+  double ind = (mt * l) / ((w / 1000) * l);
   return ind;
 }
 
@@ -205,3 +161,4 @@ double scalc(double w, double h) {
   return w / h;
 }
 ///////////////
+
