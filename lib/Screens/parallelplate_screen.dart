@@ -86,7 +86,10 @@ class _ParallelplateScreen extends State<ParallelplateScreen> {
                 child: Container(
                   width: 500,
                   height: 500,
-                  color: Apptheme.darker,
+                  //color: Apptheme.darker,
+                  decoration: BoxDecoration(
+                      color: Apptheme.darker,
+                      borderRadius: BorderRadius.circular(10.0)),
                   child: TitledContainer(
                     title: 'Z0 vs h',
                     textAlign: TextAlignTitledContainer.Center,
@@ -96,7 +99,10 @@ class _ParallelplateScreen extends State<ParallelplateScreen> {
                     child: Container(
                         width: 500,
                         height: 500,
-                        color: Apptheme.darker,
+                        // color: Apptheme.darker,
+                        decoration: BoxDecoration(
+                            color: Apptheme.darker,
+                            borderRadius: BorderRadius.circular(10.0)),
                         child: LineChart(LineChartData(
                             minX: minX,
                             minY: minY,
@@ -138,7 +144,10 @@ class _ParallelplateScreen extends State<ParallelplateScreen> {
                 child: Container(
                   width: 500,
                   height: 500,
-                  color: Apptheme.darker,
+                  //color: Apptheme.darker,
+                  decoration: BoxDecoration(
+                      color: Apptheme.darker,
+                      borderRadius: BorderRadius.circular(10.0)),
                   child: Image.asset('assets/PARALLEL_PLATE_IMAGE.png'),
                 ),
               ), //Box one with container 2
@@ -150,7 +159,10 @@ class _ParallelplateScreen extends State<ParallelplateScreen> {
                 child: Container(
                   width: 500,
                   height: 500,
-                  color: Apptheme.darker,
+                  //color: Apptheme.darker,
+                  decoration: BoxDecoration(
+                      color: Apptheme.darker,
+                      borderRadius: BorderRadius.circular(10.0)),
                   child: Column(
                     children: [
                       Row(

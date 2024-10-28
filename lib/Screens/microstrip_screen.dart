@@ -82,7 +82,10 @@ class _MicrostripScreen extends State<MicrostripScreen> {
                 child: Container(
                   width: 500,
                   height: 500,
-                  color: Apptheme.darker,
+                  //color: Apptheme.darker,
+                  decoration: BoxDecoration(
+                      color: Apptheme.darker,
+                      borderRadius: BorderRadius.circular(10.0)),
                   child: TitledContainer(
                     title: 'Z0 vs h',
                     textAlign: TextAlignTitledContainer.Center,
@@ -92,7 +95,10 @@ class _MicrostripScreen extends State<MicrostripScreen> {
                     child: Container(
                         width: 500,
                         height: 500,
-                        color: Apptheme.darker,
+                        //color: Apptheme.darker,
+                        decoration: BoxDecoration(
+                            color: Apptheme.darker,
+                            borderRadius: BorderRadius.circular(10.0)),
                         child: LineChart(LineChartData(
                             minX: minX,
                             minY: minY,
@@ -133,10 +139,13 @@ class _MicrostripScreen extends State<MicrostripScreen> {
                 child: Container(
                   width: 500,
                   height: 500,
-                  color: Apptheme.darker,
+                  //color: Apptheme.darker,
+                  decoration: BoxDecoration(
+                      color: Apptheme.darker,
+                      borderRadius: BorderRadius.circular(10.0)),
                   child: SizedBox(
-                      width: 300,
-                      height: 300,
+                      width: 250,
+                      height: 250,
                       child: Image.asset('assets/WIRESTRIP_IMAGE.png')),
                 ),
               ), //Box one with container 2
@@ -148,7 +157,10 @@ class _MicrostripScreen extends State<MicrostripScreen> {
                 child: Container(
                   width: 500,
                   height: 500,
-                  color: Apptheme.darker,
+                  //color: Apptheme.darker,
+                  decoration: BoxDecoration(
+                      color: Apptheme.darker,
+                      borderRadius: BorderRadius.circular(10.0)),
                   child: Column(
                     children: [
                       Row(
@@ -221,7 +233,7 @@ class _MicrostripScreen extends State<MicrostripScreen> {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              'C: ${c.toStringAsExponential(2)}F/m',
+                              'C: ${c.toStringAsExponential(2)}F/mm',
                               style: Apptheme.inputStyle,
                             ),
                           ),
@@ -229,7 +241,7 @@ class _MicrostripScreen extends State<MicrostripScreen> {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              'L: ${l.toStringAsExponential(2)}H/m',
+                              'L: ${l.toStringAsExponential(2)}H/mm',
                               style: Apptheme.inputStyle,
                             ),
                           )

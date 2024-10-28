@@ -88,7 +88,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Container(
                   width: 500,
                   height: 500,
-                  color: Apptheme.darker,
+                  //color: Apptheme.darker,
+                  decoration: BoxDecoration(
+                      color: Apptheme.darker,
+                      borderRadius: BorderRadius.circular(10.0)),
                   child: TitledContainer(
                     title: 'Z0 vs D(mm)',
                     textAlign: TextAlignTitledContainer.Center,
@@ -98,7 +101,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Container(
                         width: 500,
                         height: 500,
-                        color: Apptheme.darker,
+                        //color: Apptheme.darker,
+                        decoration: BoxDecoration(
+                            color: Apptheme.darker,
+                            borderRadius: BorderRadius.circular(10.0)),
                         child: LineChart(LineChartData(
                             minX: minX,
                             minY: minY,
@@ -139,7 +145,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Container(
                   width: 500,
                   height: 500,
-                  color: Apptheme.darker,
+                  //color: Apptheme.darker,
+                  decoration: BoxDecoration(
+                      color: Apptheme.darker,
+                      borderRadius: BorderRadius.circular(10.0)),
                   child: Image.asset('assets/TWOWIRE_IMAGE.png'),
                 ),
               ), //Box one with container 2
@@ -151,7 +160,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Container(
                   width: 500,
                   height: 500,
-                  color: Apptheme.darker,
+                  //color: Apptheme.darker,
+                  decoration: BoxDecoration(
+                      color: Apptheme.darker,
+                      borderRadius: BorderRadius.circular(10.0)),
                   child: Column(
                     children: [
                       Row(

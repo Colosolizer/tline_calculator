@@ -156,7 +156,7 @@ double copdelay(double p) {
 //Capacitance per unit length of a Two Wire TM Line
 double twocap(double D, double d1, double er) {
   double r = d1 / 2;
-  double cap = (2 * pi * er) / (log(D / (r)));
+  double cap = (2 * pi * er) / (log((D / 1000) / (r / 1000)));
   return cap;
 }
 
@@ -164,26 +164,26 @@ double twocap(double D, double d1, double er) {
 double twoind(double m, double D, double d1) {
   double r = d1 / 2;
   double mu_t = mu * m;
-  double ind = (mu_t / pi) / (log(D / r));
+  double ind = (mu_t / pi) / (log((D / 1000) / (r / 1000)));
   return ind;
 }
 ////////////////////////////////
 
 //Parallel Plate Specific Functions
 
-//Capacitance per unit length of a Parallel Plate TM Line
+//Capacitance per unit length of a Parallel Plate TM Line in m
 
 double paracap(double er, double w, double l, double h) {
   double e = er * e0;
-  double cap = (e * w * h) / l;
+  double cap = (e * (w / 1000) * (h / 1000)) / l;
   return cap;
 }
 
-//Inductance per unit length of a Prallel Plate TM Line
+//Inductance per unit length of a Prallel Plate TM Line in m
 
 double paraind(double m, double l, double w, double h) {
   double m_t = m * mu;
-  double ind = (m_t * l) / (w * l);
+  double ind = (m_t * l) / ((w / 1000) * l);
   return ind;
 }
 

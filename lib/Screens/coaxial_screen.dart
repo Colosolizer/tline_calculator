@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tline_calculator/Screens/general_screen.dart';
 import 'package:tline_calculator/Screens/home_screen.dart';
 import 'package:tline_calculator/Screens/microstrip_screen.dart';
 import 'package:tline_calculator/Screens/parallelplate_screen.dart';
@@ -89,7 +90,10 @@ class _CoaxialScreen extends State<CoaxialScreen> {
                   child: Container(
                       width: 500,
                       height: 500,
-                      color: Apptheme.darker,
+                      //color: Apptheme.darker,
+                      decoration: BoxDecoration(
+                          color: Apptheme.darker,
+                          borderRadius: BorderRadius.circular(10.0)),
                       child: LineChart(LineChartData(
                           minX: minX,
                           minY: minY,
@@ -129,7 +133,10 @@ class _CoaxialScreen extends State<CoaxialScreen> {
                 child: Container(
                   width: 500,
                   height: 500,
-                  color: Apptheme.darker,
+                  //color: Apptheme.darker,
+                  decoration: BoxDecoration(
+                      color: Apptheme.darker,
+                      borderRadius: BorderRadius.circular(10.0)),
                   child: SizedBox(
                     height: 300,
                     width: 300,
@@ -145,7 +152,10 @@ class _CoaxialScreen extends State<CoaxialScreen> {
                 child: Container(
                   width: 500,
                   height: 500,
-                  color: Apptheme.darker,
+                  //color: Apptheme.darker,
+                  decoration: BoxDecoration(
+                      color: Apptheme.darker,
+                      borderRadius: BorderRadius.circular(10.0)),
                   child: Column(
                     children: [
                       Row(
@@ -279,7 +289,13 @@ class _CoaxialScreen extends State<CoaxialScreen> {
                   //Padding for Air Line Button
                   padding: const EdgeInsets.all(
                       8.0), // Add padding around the button
-                  child: _mainbutton(() => null, 'AIR LINE'),
+                  child: _mainbutton(
+                      () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => GeneralScreen()),
+                          ),
+                      'AIR LINE'),
                 ),
                 Padding(
                   //Padding for MicroStrip Line Button
