@@ -186,3 +186,22 @@ double paraind(double m, double l, double w, double h) {
   double ind = (m_t * l) / (w * l);
   return ind;
 }
+
+//Microstrip Specific Formulas
+
+//Calculates miceostrip capacitance per unit length
+double microcap(double h, double t, double w, double er) {
+  double e = er * e0;
+  double mcap = (e / h) * (1 / (log(w / t)));
+  return mcap;
+}
+
+double microind(double w, double t) {
+  double mind = (mu / (2 * pi)) * log(w / t);
+  return mind;
+}
+
+double scalc(double w, double h) {
+  return w / h;
+}
+///////////////

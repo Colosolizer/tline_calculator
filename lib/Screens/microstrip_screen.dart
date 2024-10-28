@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_titled_container/flutter_titled_container.dart';
 import 'package:tline_calculator/Screens/coaxial_screen.dart';
 import 'package:tline_calculator/Screens/home_screen.dart';
 import 'package:tline_calculator/Screens/parallelplate_screen.dart';
@@ -78,24 +79,165 @@ class _MicrostripScreen extends State<MicrostripScreen> {
                 //Contains the First Container
                 width: 400,
                 height: 400,
-                child:
-                    Container(width: 500, height: 500, color: Apptheme.darker),
+                child: Container(
+                  width: 500,
+                  height: 500,
+                  color: Apptheme.darker,
+                  child: TitledContainer(
+                    title: 'Z0 vs h',
+                    textAlign: TextAlignTitledContainer.Center,
+                    titleColor: Apptheme.accent,
+                    backgroundColor: Colors.transparent,
+                    fontSize: 20.0,
+                    child: Container(
+                        width: 500,
+                        height: 500,
+                        color: Apptheme.darker,
+                        child: LineChart(LineChartData(
+                            minX: minX,
+                            minY: minY,
+                            maxY: maxY,
+                            maxX: maxX,
+                            gridData: FlGridData(
+                              show: true,
+                              getDrawingHorizontalLine: (value) {
+                                return FlLine(
+                                    color: Apptheme.light, strokeWidth: 0.5);
+                              },
+                              drawVerticalLine: true,
+                              getDrawingVerticalLine: (value) {
+                                return FlLine(
+                                    color: Apptheme.light, strokeWidth: 0.5);
+                              },
+                            ),
+                            lineBarsData: [
+                              LineChartBarData(
+                                spots: z0Data,
+                                isCurved: true,
+                                color: Apptheme.accent,
+                              ),
+                              /*LineChartBarData(
+                                spots: y0Data,
+                                isCurved: true,
+                                color: Apptheme.light,
+                              )*/
+                            ]))),
+                  ),
+                ),
               ), //Box one with container 1
               SizedBox(width: 30, height: 5),
               SizedBox(
                 //Contains the First Container
                 width: 400,
                 height: 400,
-                child:
-                    Container(width: 500, height: 500, color: Apptheme.darker),
+                child: Container(
+                  width: 500,
+                  height: 500,
+                  color: Apptheme.darker,
+                  child: SizedBox(
+                      width: 300,
+                      height: 300,
+                      child: Image.asset('assets/WIRESTRIP_IMAGE.png')),
+                ),
               ), //Box one with container 2
               SizedBox(width: 30, height: 5),
               SizedBox(
                 //Contains the First Container
                 width: 400,
                 height: 400,
-                child:
-                    Container(width: 500, height: 500, color: Apptheme.darker),
+                child: Container(
+                  width: 500,
+                  height: 500,
+                  color: Apptheme.darker,
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          //Showcases Frequency
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Frequency: $_freq',
+                              style: Apptheme.inputStyle,
+                            ),
+                          ),
+                          //Showcases Angular Frequency (w)
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'w: ${w.toStringAsFixed(2)}rad/s',
+                              style: Apptheme.inputStyle,
+                            ),
+                          )
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          //Phase Constant
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'β: ${phaseconstant.toStringAsExponential(2)}rad/m',
+                              style: Apptheme.inputStyle,
+                            ),
+                          ),
+                          //Phase Velocity (u_p)
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'u_p: ${phasevelocity.toStringAsExponential(2)}m/s',
+                              style: Apptheme.inputStyle,
+                            ),
+                          )
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          //Characteristic Impedance (Z_0)
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Z_0: ${z0.toStringAsFixed(2)}ohm',
+                              style: Apptheme.inputStyle,
+                            ),
+                          ),
+                          //Admittance
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Y_0: ${y0.toStringAsExponential(2)}S',
+                              style: Apptheme.inputStyle,
+                            ),
+                          )
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          //Coaxial Capacitance per unit length
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'C: ${c.toStringAsExponential(2)}F/m',
+                              style: Apptheme.inputStyle,
+                            ),
+                          ),
+                          //Coaxial Inductance per unit length
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'L: ${l.toStringAsExponential(2)}H/m',
+                              style: Apptheme.inputStyle,
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ) //Box one with container 3
             ],
           ), //END OF TOP ROW
@@ -231,6 +373,13 @@ class _MicrostripScreen extends State<MicrostripScreen> {
               child: MaterialButton(
                 onPressed: () {
                   setState(() {
+                    //Gets Values in Text Boxes
+                    hstring = hController.text;
+                    h = double.tryParse(hstring) ?? 0.0;
+                    tstring = tController.text;
+                    t = double.tryParse(tstring) ?? 0.0;
+                    wdstring = wdController.text;
+                    wd = double.tryParse(wdstring) ?? 0.0;
                     //Calculates Frequency and Angular Frequency
                     freqtext = freqController.text;
                     _freq = double.tryParse(freqtext) ?? 0.0;
@@ -247,13 +396,13 @@ class _MicrostripScreen extends State<MicrostripScreen> {
                     //Calculate Admittance (Y)
                     y0 = admittance(z0);
                     //Calculate Capacitance per unit length C
-                    c = coacap(_b, _a, _epsilonr);
+                    c = microcap(h, t, wd, _epsilonr);
                     //Calculate Inductance per unit length L
-                    l = coind(_b, _a);
+                    l = microind(wd, t);
                     //Add current Values to list of points
                     //z0Data.add(FlSpot(_b, z0));
                     //y0Data.add(FlSpot(_b, y0));
-                    _addDataPoint(_b, z0, y0);
+                    _addDataPoint(h, z0, y0);
                   });
                 },
                 color: Apptheme.accent,
