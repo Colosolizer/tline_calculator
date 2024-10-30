@@ -25,7 +25,7 @@ class _GeneralScreenState extends State<GeneralScreen> {
   String p_constanttext = '';
   double phaseconstant = 0.0;
   double phasevelocity = 0.0;
-  Complex z0 = Complex(0, 0);
+  double z0 = 0.0;
   double y0 = 0.0;
   double ref = 0.0;
   double alpha = 0.0;
@@ -40,6 +40,9 @@ class _GeneralScreenState extends State<GeneralScreen> {
   String cstring = '';
   double mu_r = 0.0;
   String mustring = '';
+  double i1 = 0.0;
+  double i2 = 0.0;
+
   ////////
   final TextEditingController erController = TextEditingController();
   final TextEditingController freqController = TextEditingController();
@@ -248,7 +251,8 @@ class _GeneralScreenState extends State<GeneralScreen> {
                                   //Calculates Phase Velocity
                                   phasevelocity = pvelocity(_epsilonr);
                                   //Calculate Characteristic Impedance
-                                  z0 = zgeneral(R, L, G, C, w);
+                                  i1 = w * L;
+                                  i2 = w * C;
                                 });
                               },
                               color: Apptheme.accent,
@@ -292,7 +296,7 @@ class _GeneralScreenState extends State<GeneralScreen> {
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Text(
-                                          'Z0: ${z0.toString()}ohms',
+                                          'Z0: $z0',
                                           style: Apptheme.inputStyle,
                                         ),
                                       ),
@@ -591,7 +595,7 @@ class _GeneralScreenState extends State<GeneralScreen> {
                             MaterialPageRoute(
                                 builder: (context) => GeneralScreen()),
                           ),
-                      'AIR LINE'),
+                      'GENERAL T LINE'),
                 ),
                 Padding(
                   //Padding for MicroStrip Line Button

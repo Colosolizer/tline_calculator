@@ -295,7 +295,7 @@ class _CoaxialScreen extends State<CoaxialScreen> {
                             MaterialPageRoute(
                                 builder: (context) => GeneralScreen()),
                           ),
-                      'AIR LINE'),
+                      'GENERAL T LINE'),
                 ),
                 Padding(
                   //Padding for MicroStrip Line Button
