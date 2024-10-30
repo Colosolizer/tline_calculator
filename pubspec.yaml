@@ -50,6 +50,14 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^4.0.0
+  msix: ^3.16.8
+  flutter_launcher_icons: ^0.13.1
+
+  
+  flutter_icons:
+    windows:
+      generate: true
+      image_path: "assets/T_LINE_LOGO.png"  # Replace with your actual icon file name
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -68,6 +76,7 @@ flutter:
    - assets/TWOWIRE_IMAGE.png
    - assets/PARALLEL_PLATE_IMAGE.png
    - assets/WIRESTRIP_IMAGE.png
+   - assets/T_LINE_LOGO.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
@@ -96,3 +105,4 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
